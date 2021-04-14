@@ -1,5 +1,5 @@
 export type RNodeStatic<T> = {
-  type: "static";
+  type: 'static';
   path: string;
   staticChildren: RNodeStatic<T>[];
   paramChildren: RNodeParam<T>[];
@@ -7,7 +7,7 @@ export type RNodeStatic<T> = {
 };
 
 export type RNodeParam<T> = {
-  type: "param";
+  type: 'param';
   paramName: string;
   staticChildren: RNodeStatic<T>[];
   regex?: RegExp;

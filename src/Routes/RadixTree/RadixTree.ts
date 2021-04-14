@@ -1,7 +1,7 @@
-import { PathHasValueException } from "../Exceptions";
-import { CharCode } from "./enums";
+import { PathHasValueException } from '../Exceptions';
+import { CharCode } from './enums';
 // import { RadixTreeSearch } from "./RadixTreeSearch";
-import { FindResult, RNode, RNodeParam, RNodeStatic } from "./types";
+import { FindResult, RNode, RNodeParam, RNodeStatic } from './types';
 
 export class RadixTree<T> {
   private readonly paths: string[] = [];
@@ -12,8 +12,8 @@ export class RadixTree<T> {
   }
   constructor() {
     this.root = {
-      type: "static",
-      path: "/",
+      type: 'static',
+      path: '/',
       staticChildren: [],
       paramChildren: [],
     };
@@ -29,7 +29,7 @@ export class RadixTree<T> {
     const preparePath = RadixTree._preparePath(path);
     const param = {};
 
-    if (preparePath === "") {
+    if (preparePath === '') {
       return {
         param,
         value: this.root.value,
@@ -42,7 +42,7 @@ export class RadixTree<T> {
   protected _find(
     path: string,
     node: RNode<T>,
-    param: Record<string, unknown>
+    param: Record<string, unknown>,
   ): FindResult<T> {
     for (const children of node.staticChildren) {
       let i = 0;
@@ -54,11 +54,11 @@ export class RadixTree<T> {
         const notSamePath = children.path.slice(i);
         const nextPath = path.slice(i);
 
-        if (notSamePath !== "") {
+        if (notSamePath !== '') {
           continue;
         }
 
-        if (nextPath === "") {
+        if (nextPath === '') {
           return { param, value: children.value };
         }
 
@@ -66,20 +66,20 @@ export class RadixTree<T> {
       }
     }
 
-    if (node.type === "static") {
+    if (node.type === 'static') {
       for (const children of node.paramChildren) {
-        const startNextPath = path.indexOf("/");
+        const startNextPath = path.indexOf('/');
 
         const thisPath =
           startNextPath < 0 ? path : path.slice(0, startNextPath);
 
-        const nextPath = startNextPath < 0 ? "" : path.slice(startNextPath);
+        const nextPath = startNextPath < 0 ? '' : path.slice(startNextPath);
 
         const isRegex = children.regex?.test(thisPath);
 
         if (isRegex) {
           param[children.paramName] = thisPath;
-          if (nextPath === "") {
+          if (nextPath === '') {
             return { param, value: children.value };
           } else {
             return this._find(nextPath, children, param);
@@ -96,8 +96,8 @@ export class RadixTree<T> {
 
     const preparePath = RadixTree._preparePath(path);
 
-    if (preparePath === "") {
-      if (typeof this.root.value !== "undefined") {
+    if (preparePath === '') {
+      if (typeof this.root.value !== 'undefined') {
         throw new PathHasValueException();
       }
       this.root.value = value;
@@ -113,7 +113,7 @@ export class RadixTree<T> {
   protected _add(path: string, value: T, node: RNode<T>) {
     // if first index is colon so is start of param.
     if (path.charCodeAt(0) === CharCode.COLON) {
-      if (node.type === "static") {
+      if (node.type === 'static') {
         let i = 1;
         let endParamName = -1;
         let countBrackets = 0;
@@ -158,32 +158,32 @@ export class RadixTree<T> {
         const staticPath = path.slice(endParam);
         const paramName = path.slice(1, endParamName);
         const regexParam =
-          endRegex < 0 ? "(.*)" : path.slice(startRegex, endRegex);
+          endRegex < 0 ? '(.*)' : path.slice(startRegex, endRegex);
 
         console.log(staticPath);
 
-        if (staticPath === "") {
+        if (staticPath === '') {
           node.paramChildren.push(
-            RadixTree._createParamRNode(paramName, regexParam, value)
+            RadixTree._createParamRNode(paramName, regexParam, value),
           );
         } else {
           node.paramChildren.push(
-            RadixTree._createParamRNode(paramName, regexParam)
+            RadixTree._createParamRNode(paramName, regexParam),
           );
           this._add(
             staticPath,
             value,
-            node.paramChildren[node.paramChildren.length - 1]!
+            node.paramChildren[node.paramChildren.length - 1]!,
           );
         }
       }
     } else {
-      if (node.type === "static") {
+      if (node.type === 'static') {
         // check if has param.
-        const startParamPath = path.indexOf(":");
+        const startParamPath = path.indexOf(':');
         const staticPath =
           startParamPath < 0 ? path : path.slice(0, startParamPath);
-        const paramPath = startParamPath < 0 ? "" : path.slice(startParamPath);
+        const paramPath = startParamPath < 0 ? '' : path.slice(startParamPath);
 
         for (const children of node.staticChildren) {
           if (staticPath.charCodeAt(0) !== children.path.charCodeAt(0)) {
@@ -202,14 +202,14 @@ export class RadixTree<T> {
           const nextPath = staticPath.slice(endPath) + paramPath;
           children.path = samePath;
 
-          if (notSamePath !== "") {
+          if (notSamePath !== '') {
             children.staticChildren.push(
-              RadixTree._createStaticRNode(notSamePath, children.value)
+              RadixTree._createStaticRNode(notSamePath, children.value),
             );
             delete children.value;
           }
 
-          if (nextPath === "") {
+          if (nextPath === '') {
             children.value = value;
           } else {
             this._add(nextPath, value, children);
@@ -230,10 +230,10 @@ export class RadixTree<T> {
 
   protected static _createStaticRNode<T>(
     path: string,
-    value?: T
+    value?: T,
   ): RNodeStatic<T> {
     return {
-      type: "static",
+      type: 'static',
       path,
       staticChildren: [],
       paramChildren: [],
@@ -244,11 +244,11 @@ export class RadixTree<T> {
   protected static _createParamRNode<T>(
     param: string,
     regex?: string,
-    value?: T
+    value?: T,
   ): RNodeParam<T> {
-    regex ??= "(.*)";
+    regex ??= '(.*)';
     return {
-      type: "param",
+      type: 'param',
       paramName: param,
       value,
       regex: new RegExp(regex),

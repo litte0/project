@@ -1,5 +1,5 @@
-import { RadixTree } from "./RadixTree";
-import { FindResult, RNode } from "./types";
+import { RadixTree } from './RadixTree';
+import { FindResult, RNode } from './types';
 
 export class RadixTreeSearch<T> {
   private readonly result: FindResult<T> = { param: {} };
@@ -14,7 +14,7 @@ export class RadixTreeSearch<T> {
   protected find() {
     const preparePath = RadixTree._preparePath(this.path);
 
-    if (preparePath === "") {
+    if (preparePath === '') {
       this.result.value = this.root.value;
     } else {
       this.result.value = this._find(preparePath, this.root);
@@ -31,11 +31,11 @@ export class RadixTreeSearch<T> {
         const notSamePath = children.path.slice(i);
         const nextPath = path.slice(i);
 
-        if (notSamePath !== "") {
+        if (notSamePath !== '') {
           continue;
         }
 
-        if (nextPath === "") {
+        if (nextPath === '') {
           return children.value;
         }
 
@@ -43,20 +43,20 @@ export class RadixTreeSearch<T> {
       }
     }
 
-    if (node.type === "static") {
+    if (node.type === 'static') {
       for (const children of node.paramChildren) {
-        const startNextPath = path.indexOf("/");
+        const startNextPath = path.indexOf('/');
 
         const thisPath =
           startNextPath < 0 ? path : path.slice(0, startNextPath);
 
-        const nextPath = startNextPath < 0 ? "" : path.slice(startNextPath);
+        const nextPath = startNextPath < 0 ? '' : path.slice(startNextPath);
 
         const isRegex = children.regex?.test(thisPath);
 
         if (isRegex) {
           this.result.param[children.paramName] = thisPath;
-          if (nextPath === "") {
+          if (nextPath === '') {
             return children.value;
           } else {
             return this._find(nextPath, children);

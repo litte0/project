@@ -1,5 +1,5 @@
-import uWS from "uWebSockets.js";
-import { Router } from "@/Routes";
+import uWS from 'uWebSockets.js';
+import { Router } from '@/Routes';
 
 type HttpServerOptions = {
   port?: number;
@@ -39,38 +39,38 @@ export class HttpServer {
   // }
 
   run() {
-    this._server.any("/*", (res, req) => this._onHandler(res, req, this));
-    this._server.listen(this.port, (listenSocket) => {
+    this._server.any('/*', (res, req) => this._onHandler(res, req, this));
+    this._server.listen(this.port, listenSocket => {
       if (!listenSocket) {
-        throw new Error("Cannot create uWs.");
+        throw new Error('Cannot create uWs.');
       }
 
-      console.log("Listen on port : " + this.port);
+      console.log('Listen on port : ' + this.port);
     });
   }
 
   protected _onHandler(
     response: uWS.HttpResponse,
     request: uWS.HttpRequest,
-    self: this
+    self: this,
   ) {
     try {
       const handler = self._router.find(request.getMethod(), request.getUrl());
       if (handler) {
         response.cork(() =>
-          response.writeStatus("200 OK").end(JSON.stringify(handler))
+          response.writeStatus('200 OK').end(JSON.stringify(handler)),
         );
       } else {
         response.cork(() =>
-          response.writeStatus("404 Not Found").end("Not Found")
+          response.writeStatus('404 Not Found').end('Not Found'),
         );
       }
     } catch (err) {
       console.error(err);
       response.cork(() =>
         response
-          .writeStatus("500 Internal Server Error")
-          .end(JSON.stringify(err))
+          .writeStatus('500 Internal Server Error')
+          .end(JSON.stringify(err)),
       );
     }
   }

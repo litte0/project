@@ -1,1 +1,1 @@
-export * from "./RadixTree";
+export * from './RadixTree';

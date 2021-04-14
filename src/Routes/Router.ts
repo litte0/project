@@ -1,4 +1,4 @@
-import { RadixTree } from "./RadixTree";
+import { RadixTree } from './RadixTree';
 
 export class Router {
   private _router = new Map<string, RadixTree<unknown>>();
