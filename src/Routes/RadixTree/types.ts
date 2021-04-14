@@ -1,3 +1,9 @@
+export type RNodeRoot<T> = {
+  type: 'root';
+  staticChildren: RNodeStatic<T>[];
+  paramChildren: RNodeParam<T>[];
+};
+
 export type RNodeStatic<T> = {
   type: 'static';
   path: string;
@@ -14,7 +20,7 @@ export type RNodeParam<T> = {
   value?: T;
 };
 
-export type RNode<T> = RNodeStatic<T> | RNodeParam<T>;
+export type RNode<T> = RNodeRoot<T> | RNodeStatic<T> | RNodeParam<T>;
 
 export type FindResult<T> = {
   param: Record<string, unknown>;

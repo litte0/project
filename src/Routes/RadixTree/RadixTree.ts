@@ -1,4 +1,4 @@
-import { PathHasValueException } from '../Exceptions';
+// import { PathHasValueException } from '../Exceptions';
 import { CharCode } from './enums';
 // import { RadixTreeSearch } from "./RadixTreeSearch";
 import { FindResult, RNode, RNodeParam, RNodeStatic } from './types';
@@ -12,31 +12,16 @@ export class RadixTree<T> {
   }
   constructor() {
     this.root = {
-      type: 'static',
-      path: '/',
+      type: 'root',
       staticChildren: [],
       paramChildren: [],
     };
   }
 
-  //   find(path: string): FindResult<T> {
-  //     const radixSearch = new RadixTreeSearch(path, this.root);
-
-  //     return radixSearch.findResult;
-  //   }
-
   find(path: string): FindResult<T> {
-    const preparePath = RadixTree._preparePath(path);
     const param = {};
 
-    if (preparePath === '') {
-      return {
-        param,
-        value: this.root.value,
-      };
-    }
-
-    return this._find(preparePath, this.root, param);
+    return this._find(path, this.root, param);
   }
 
   protected _find(
@@ -94,18 +79,7 @@ export class RadixTree<T> {
   add(path: string, value: T): RadixTree<T> {
     this.paths.push(path);
 
-    const preparePath = RadixTree._preparePath(path);
-
-    if (preparePath === '') {
-      if (typeof this.root.value !== 'undefined') {
-        throw new PathHasValueException();
-      }
-      this.root.value = value;
-
-      return this;
-    }
-
-    this._add(preparePath, value, this.root);
+    this._add(path, value, this.root);
 
     return this;
   }
@@ -113,7 +87,7 @@ export class RadixTree<T> {
   protected _add(path: string, value: T, node: RNode<T>) {
     // if first index is colon so is start of param.
     if (path.charCodeAt(0) === CharCode.COLON) {
-      if (node.type === 'static') {
+      if (node.type === 'static' || node.type === 'root') {
         let i = 1;
         let endParamName = -1;
         let countBrackets = 0;
@@ -178,7 +152,7 @@ export class RadixTree<T> {
         }
       }
     } else {
-      if (node.type === 'static') {
+      if (node.type === 'static' || node.type === 'root') {
         // check if has param.
         const startParamPath = path.indexOf(':');
         const staticPath =
@@ -279,17 +253,5 @@ export class RadixTree<T> {
       startParamPath,
       endPath,
     };
-  }
-
-  static _preparePath(path: string) {
-    if (path.charCodeAt(0) === CharCode.SLASH) {
-      path = path.slice(1);
-    }
-
-    if (path.charCodeAt(path.length - 1) === CharCode.SLASH) {
-      path = path.slice(0, path.length - 1);
-    }
-
-    return path;
   }
 }

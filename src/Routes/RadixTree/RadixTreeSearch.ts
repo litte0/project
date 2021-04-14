@@ -12,14 +12,9 @@ export class RadixTreeSearch<T> {
   }
 
   protected find() {
-    const preparePath = RadixTree._preparePath(this.path);
-
-    if (preparePath === '') {
-      this.result.value = this.root.value;
-    } else {
-      this.result.value = this._find(preparePath, this.root);
-    }
+    this.result.value = this._find(this.path, this.root);
   }
+
   protected _find(path: string, node: RNode<T>): T | undefined {
     for (const children of node.staticChildren) {
       let i = 0;

@@ -1,6 +1,6 @@
 import uWS from 'uWebSockets.js';
 import { Router } from '@/Routes';
-
+import { HttpStatus } from './enums';
 type HttpServerOptions = {
   port?: number;
 };
@@ -56,21 +56,21 @@ export class HttpServer {
   ) {
     try {
       const handler = self._router.find(request.getMethod(), request.getUrl());
-      if (handler) {
-        response.cork(() =>
-          response.writeStatus('200 OK').end(JSON.stringify(handler)),
-        );
+      if (handler && handler.value) {
+        let result = handler.value();
+        if (typeof result === 'object') {
+          result = JSON.stringify(result);
+        }
+        response.cork(() => response.writeStatus(HttpStatus.OK).end(result));
       } else {
         response.cork(() =>
-          response.writeStatus('404 Not Found').end('Not Found'),
+          response.writeStatus(HttpStatus.NOT_FOUND).end('Not Found'),
         );
       }
     } catch (err) {
       console.error(err);
       response.cork(() =>
-        response
-          .writeStatus('500 Internal Server Error')
-          .end(JSON.stringify(err)),
+        response.writeStatus(HttpStatus.SERVER_ERROR).end(JSON.stringify(err)),
       );
     }
   }
