@@ -1,6 +1,4 @@
-// import { PathHasValueException } from '../Exceptions';
 import { CharCode } from './enums';
-// import { RadixTreeSearch } from "./RadixTreeSearch";
 import { FindResult, RNode, RNodeParam, RNodeStatic } from './types';
 
 export class RadixTree<T> {
@@ -10,6 +8,7 @@ export class RadixTree<T> {
   get tree() {
     return this.root;
   }
+
   constructor() {
     this.root = {
       type: 'root',

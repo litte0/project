@@ -1,5 +1,5 @@
 import uWS from 'uWebSockets.js';
-import { Router } from '@/Routes';
+import { Router } from '@/Router';
 import { HttpStatus } from './enums';
 type HttpServerOptions = {
   port?: number;
