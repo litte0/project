@@ -1,15 +1,11 @@
 import { HttpServer } from './HttpServer';
 
 function bootstrap(): void {
-  const server = new HttpServer();
+  const server = new HttpServer({ port: 8001, engine: 'uws' });
 
-  server.router.add('get', '/hello', () => {
+  server.router.add('get', '/', () => {
     return 'Hello World.';
   });
-
-  server.router.add('get', '/cat', () => 'hello cat');
-
-  server.router.add('get', '/', () => 'home');
 
   server.run();
 }

@@ -24,6 +24,7 @@ export class Router {
   }
 
   protected _add(method: string, path: string, handler: FunctionHandler) {
+    method = method.toUpperCase();
     const isHasMethod = this._router.has(method);
 
     if (!isHasMethod) {
@@ -46,6 +47,7 @@ export class Router {
   }
 
   find(method: string, path: string) {
+    method = method.toUpperCase();
     const route = this._router.get(method);
 
     if (route) {

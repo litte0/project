@@ -4,10 +4,14 @@
   "license": "MIT",
   "private": true,
   "scripts": {
+    "build:bench": "tsc ./benchmarks/* --outDir bench",
     "format": "prettier \"src/**/*.ts\" --ignore-path ./.prettierignore --write && git status",
-    "start:dev": "ts-node-dev -r tsconfig-paths/register src/main"
+    "start:dev": "ts-node-dev -r tsconfig-paths/register src/main",
+    "start": "ts-node -r tsconfig-paths/register src/main",
+    "bench:test": "autocannon -d 3 http://localhost:8081 && autocannon -c 1024 -d 10 -p 10 http://localhost:8081"
   },
   "devDependencies": {
+    "@types/express": "^4.17.11",
     "@types/node": "^14.14.37",
     "prettier": "^2.2.1",
     "ts-node": "^9.1.1",

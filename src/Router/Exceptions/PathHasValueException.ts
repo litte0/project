@@ -1,4 +1,4 @@
-import { Exception } from '@/Core/Exception';
+import { Exception } from '@little0/Core/Exception';
 
 export class PathHasValueException extends Exception {
   constructor() {
